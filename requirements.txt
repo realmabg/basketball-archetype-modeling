@@ -1,0 +1,6 @@
+archetypes==0.12.2
+pandas
+numpy
+scikit-learn
+scipy
+matplotlib

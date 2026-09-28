@@ -1,0 +1,14 @@
+.DS_Store
+.venv/
+__pycache__/
+*.pyc
+
+# Large/local data should stay outside git.
+data/
+*.zip
+*.parquet
+
+# Generated experiment artifacts can be large; track curated summaries only.
+outputs/**/assignments/
+outputs/**/profiles/
+outputs/**/scaling/
