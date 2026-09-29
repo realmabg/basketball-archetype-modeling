@@ -1,0 +1,17 @@
+group,feature,group_weight,features_in_group,per_feature_squared_weight,z_multiplier
+creation,usg,0.14,2,0.07,0.2645751311064591
+creation,ast_pct,0.14,2,0.07,0.2645751311064591
+possession,tov_pct,0.14,2,0.07,0.2645751311064591
+possession,ast_tov,0.14,2,0.07,0.2645751311064591
+rim_pressure,FTR,0.14,1,0.14,0.37416573867739417
+shooting_tendency,three_share,0.14,2,0.07,0.2645751311064591
+shooting_tendency,three_pa_per_100_team_poss,0.14,2,0.07,0.2645751311064591
+rebounding,orb_pct,0.14,2,0.07,0.2645751311064591
+rebounding,drb_pct,0.14,2,0.07,0.2645751311064591
+defense,stl_pct,0.14,2,0.07,0.2645751311064591
+defense,blk_pct,0.14,2,0.07,0.2645751311064591
+residual_context,resid_three_pct_shot_mix,0.16,4,0.04,0.2
+residual_context,resid_orb_pct_height,0.16,4,0.04,0.2
+residual_context,resid_three_share_height,0.16,4,0.04,0.2
+residual_context,resid_drb_pct_height,0.16,4,0.04,0.2
+height_context,height_inches,0.0625,1,0.0625,0.25

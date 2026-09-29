@@ -36,6 +36,13 @@ BASE_FEATURES = [
     "ft_pct",
 ]
 
+RESIDUAL_FEATURES = [
+    "resid_three_pct_shot_mix",
+    "resid_orb_pct_height",
+    "resid_three_share_height",
+    "resid_drb_pct_height",
+]
+
 EFFICIENCY_FEATURES = ["eFG", "three_pct", "ft_pct"]
 
 FEATURE_SETS = {
@@ -103,6 +110,60 @@ FEATURE_SETS = {
         "three_pct",
         "ft_pct",
         "height_inches",
+    ],
+    "role_residual_height_025": [
+        "usg",
+        "ast_pct",
+        "tov_pct",
+        "ast_tov",
+        "FTR",
+        "three_share",
+        "three_pa_per_100_team_poss",
+        "orb_pct",
+        "drb_pct",
+        "stl_pct",
+        "blk_pct",
+        "height_inches",
+        "resid_three_pct_shot_mix",
+        "resid_orb_pct_height",
+        "resid_three_share_height",
+        "resid_drb_pct_height",
+    ],
+    "role_residual_context_only_height_025": [
+        "usg",
+        "ast_pct",
+        "tov_pct",
+        "ast_tov",
+        "FTR",
+        "three_pa_per_100_team_poss",
+        "stl_pct",
+        "blk_pct",
+        "height_inches",
+        "resid_three_pct_shot_mix",
+        "resid_orb_pct_height",
+        "resid_three_share_height",
+        "resid_drb_pct_height",
+    ],
+    "quality_lite_residual_height_025": [
+        "usg",
+        "ast_pct",
+        "tov_pct",
+        "ast_tov",
+        "FTR",
+        "three_share",
+        "three_pa_per_100_team_poss",
+        "orb_pct",
+        "drb_pct",
+        "stl_pct",
+        "blk_pct",
+        "eFG",
+        "three_pct",
+        "ft_pct",
+        "height_inches",
+        "resid_three_pct_shot_mix",
+        "resid_orb_pct_height",
+        "resid_three_share_height",
+        "resid_drb_pct_height",
     ],
     "no_efficiency": [feature for feature in BASE_FEATURES if feature not in EFFICIENCY_FEATURES],
     "no_height_no_efficiency": [
@@ -191,7 +252,9 @@ def build_manifest(args: argparse.Namespace) -> pd.DataFrame:
                 "max_iter": args.max_iter,
                 "tol": args.tol,
                 "features": "|".join(features),
-                "excluded_features": "|".join(feature for feature in BASE_FEATURES if feature not in features),
+                "excluded_features": "|".join(
+                    feature for feature in BASE_FEATURES + RESIDUAL_FEATURES if feature not in features
+                ),
             }
         )
     return pd.DataFrame(rows)
