@@ -4,7 +4,7 @@ Reproducible player archetype experiments for combined D1/D2 college basketball 
 
 ## Current Experiment
 
-The current selected setup:
+The earlier weighted setup:
 
 - division-specific z-score, then recombine D1 and D2
 - winsorize each feature at the 1st/99th percentile within division
@@ -34,6 +34,33 @@ Each group contributes the same total squared-distance weight. For example, each
 - `outputs/weighted_no_height_minutes_sample3000/experiment_summary.csv`: 20 raw sampled runs
 - `outputs/weighted_no_height_minutes_sample3000/best_init_by_k.csv`: best init per k
 - `outputs/weighted_no_height_minutes_sample3000/best_5_weighted_archetype_z_stats_wide.csv`: archetype z-vector review file
+
+## Role-First Experiment
+
+The `role_first_2026_09_29` experiment tests the next role-first design:
+
+- division-specific z-score, then recombine D1 and D2
+- winsorize each feature at the 1st/99th percentile within division
+- no `mins_per_game`
+- `method = nnls`
+- `k = 6, 7, 8`
+- init methods tested: `uniform`, `furthest_sum`, `furthest_first`, `aa_plus_plus`
+
+Four feature/weight versions were tested:
+
+- `role_only_no_height`
+- `role_only_height_025`
+- `quality_lite_no_height`
+- `quality_lite_height_025`
+
+The quality-lite versions keep `eFG`, `three_pct`, and `ft_pct`, but give the whole quality group only 10% total squared-distance influence. The height versions add `height_inches` with a direct z-score multiplier of `0.25`.
+
+Key files:
+
+- `outputs/role_first_2026_09_29/all_48_raw_runs_summary.csv`
+- `outputs/role_first_2026_09_29/best_12_conceptual_runs.csv`
+- `outputs/role_first_2026_09_29/best_12_archetype_z_stats_wide.csv`
+- `outputs/role_first_2026_09_29/best_12_archetype_z_stats_long.csv`
 
 ## Data
 
