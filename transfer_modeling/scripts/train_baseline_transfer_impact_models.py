@@ -113,6 +113,7 @@ CATEGORICAL_FEATURES = [
     "d1_team",
     "next_d1_season",
 ]
+CONFERENCE_TIER_CATEGORICAL_FEATURES = ["d1_conf_tier"]
 
 WITH_MINUTES_FEATURES = ["d1_GP", "d1_mins_per_game"]
 
@@ -149,6 +150,17 @@ ARCHETYPE_COLUMN_MAPS = {
             f"k6_drop7_8_archetype_{idx}_weight": f"k6_fixed_1to6_archetype_{idx}_weight"
             for idx in range(1, 7)
         },
+    },
+    "no_minutes_drop5_7_fixed": {
+        "k6_drop7_8_archetype_confidence": "k6_no_minutes_drop5_7_archetype_confidence",
+        "k6_drop7_8_kept_mass_from_k8_1_to_6": "k6_no_minutes_drop5_7_kept_mass_from_k8_nonjunk",
+        "k6_drop7_8_removed_mass_from_k8_7_to_8": "k6_no_minutes_drop5_7_removed_mass_from_k8_5_7",
+        "k6_drop7_8_archetype_1_weight": "k6_no_minutes_drop5_7_archetype_1_source_k8_1_low_usage_connector_weight",
+        "k6_drop7_8_archetype_2_weight": "k6_no_minutes_drop5_7_archetype_2_source_k8_2_rim_protecting_big_weight",
+        "k6_drop7_8_archetype_3_weight": "k6_no_minutes_drop5_7_archetype_3_source_k8_3_lead_guard_weight",
+        "k6_drop7_8_archetype_4_weight": "k6_no_minutes_drop5_7_archetype_4_source_k8_4_defensive_spacer_weight",
+        "k6_drop7_8_archetype_5_weight": "k6_no_minutes_drop5_7_archetype_5_source_k8_6_scoring_big_weight",
+        "k6_drop7_8_archetype_6_weight": "k6_no_minutes_drop5_7_archetype_6_source_k8_8_pure_shooter_weight",
     },
 }
 
@@ -741,13 +753,24 @@ def d2_numeric_features(drop_d2_minutes: bool = False) -> list[str]:
     return [col for col in D2_NUMERIC_FEATURES if col not in D2_MINUTE_FEATURES]
 
 
-def feature_sets(df: pd.DataFrame, drop_d2_minutes: bool = False) -> dict[str, dict[str, list[str]]]:
+def feature_sets(
+    df: pd.DataFrame,
+    drop_d2_minutes: bool = False,
+    context_mode: str = "full",
+) -> dict[str, dict[str, list[str]]]:
+    if context_mode == "conf_tier_only":
+        numeric_context = []
+        categorical_candidates = CONFERENCE_TIER_CATEGORICAL_FEATURES
+    else:
+        numeric_context = CONTEXT_NUMERIC_FEATURES
+        categorical_candidates = CATEGORICAL_FEATURES
+
     numeric_base = [
         col
-        for col in d2_numeric_features(drop_d2_minutes) + CONTEXT_NUMERIC_FEATURES + ARCHETYPE_NUMERIC_FEATURES
+        for col in d2_numeric_features(drop_d2_minutes) + numeric_context + ARCHETYPE_NUMERIC_FEATURES
         if col in df.columns
     ]
-    categorical = [col for col in CATEGORICAL_FEATURES if col in df.columns and df[col].notna().any()]
+    categorical = [col for col in categorical_candidates if col in df.columns and df[col].notna().any()]
     return {
         "no_minutes": {"numeric": numeric_base, "categorical": categorical},
         "with_minutes": {
@@ -818,11 +841,12 @@ def train_single_target(
     out_dir: Path,
     random_state: int,
     drop_d2_minutes: bool = False,
+    context_mode: str = "full",
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     results = []
     predictions = []
     calibration = []
-    feature_def = feature_sets(df, drop_d2_minutes)
+    feature_def = feature_sets(df, drop_d2_minutes, context_mode)
     model_defs = models(random_state)
 
     for target_name, target_col in TARGETS.items():
@@ -894,7 +918,12 @@ def train_single_target(
     return pd.DataFrame(results), pd.concat(predictions, ignore_index=True), pd.DataFrame(calibration)
 
 
-def train_multi_output(df: pd.DataFrame, random_state: int, drop_d2_minutes: bool = False) -> pd.DataFrame:
+def train_multi_output(
+    df: pd.DataFrame,
+    random_state: int,
+    drop_d2_minutes: bool = False,
+    context_mode: str = "full",
+) -> pd.DataFrame:
     all_targets = list(TARGETS.values())
     available = df[all_targets].notna().all(axis=1)
     holdout = df["next_d1_season"].eq("2025-26")
@@ -902,7 +931,7 @@ def train_multi_output(df: pd.DataFrame, random_state: int, drop_d2_minutes: boo
         return pd.DataFrame()
 
     rows = []
-    feature_def = feature_sets(df, drop_d2_minutes)
+    feature_def = feature_sets(df, drop_d2_minutes, context_mode)
     multi_models = {
         "multi_ridge": Ridge(alpha=10.0),
         "multi_random_forest": RandomForestRegressor(
@@ -953,11 +982,17 @@ def train_multi_output(df: pd.DataFrame, random_state: int, drop_d2_minutes: boo
     return pd.DataFrame(rows)
 
 
-def feature_coverage(df: pd.DataFrame, out_dir: Path, drop_d2_minutes: bool = False) -> None:
+def feature_coverage(
+    df: pd.DataFrame,
+    out_dir: Path,
+    drop_d2_minutes: bool = False,
+    context_mode: str = "full",
+) -> None:
+    numeric_context = [] if context_mode == "conf_tier_only" else CONTEXT_NUMERIC_FEATURES
     cols = [
         col
         for col in d2_numeric_features(drop_d2_minutes)
-        + CONTEXT_NUMERIC_FEATURES
+        + numeric_context
         + ARCHETYPE_NUMERIC_FEATURES
         + WITH_MINUTES_FEATURES
         + list(TARGETS.values())
@@ -994,6 +1029,12 @@ def main() -> int:
         action="store_true",
         help="Remove raw D2 minute features d2_MIN and d2_MPG from model inputs.",
     )
+    parser.add_argument(
+        "--context-mode",
+        choices=["full", "conf_tier_only"],
+        default="full",
+        help="Use all historical context categoricals, or only destination d1_conf_tier.",
+    )
     parser.add_argument("--out-dir", default=OUT_DIR)
     parser.add_argument("--random-state", type=int, default=42)
     args = parser.parse_args()
@@ -1010,10 +1051,16 @@ def main() -> int:
     )
     model_ready = out_dir / "baseline_transfer_impact_model_ready.csv"
     df.to_csv(model_ready, index=False)
-    feature_coverage(df, out_dir, args.drop_d2_minutes)
+    feature_coverage(df, out_dir, args.drop_d2_minutes, args.context_mode)
 
-    results, predictions, calibration = train_single_target(df, out_dir, args.random_state, args.drop_d2_minutes)
-    multi_results = train_multi_output(df, args.random_state, args.drop_d2_minutes)
+    results, predictions, calibration = train_single_target(
+        df,
+        out_dir,
+        args.random_state,
+        args.drop_d2_minutes,
+        args.context_mode,
+    )
+    multi_results = train_multi_output(df, args.random_state, args.drop_d2_minutes, args.context_mode)
     if not multi_results.empty:
         all_results = pd.concat([results, multi_results], ignore_index=True)
     else:
@@ -1035,6 +1082,7 @@ def main() -> int:
         "include_archetypes": bool(args.include_archetypes),
         "archetype_mode": args.archetype_mode if args.include_archetypes else None,
         "drop_d2_minutes": bool(args.drop_d2_minutes),
+        "context_mode": args.context_mode,
         "d2_minute_features_removed": sorted(D2_MINUTE_FEATURES) if args.drop_d2_minutes else [],
         "d2_archetype_vector_matches": int(df.attrs.get("d2_archetype_vector_matches", 0)),
     }
