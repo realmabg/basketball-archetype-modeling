@@ -20,6 +20,19 @@ Model run using D2/source features, destination context, conference tier, and kn
 
 Same setup, plus D2 archetype soft-vector features.
 
+### `no_d2_minutes_no_archetypes/`
+
+Rerun that removes raw D2 minute features `d2_MIN` and `d2_MPG`, without archetype features. The normal `no_minutes` / `with_minutes` regimes still refer to whether known D1 minutes are excluded or included.
+
+### `no_d2_minutes_fixed_k6_archetypes/`
+
+Same no-D2-minutes setup, plus D2 fixed-centroid 1-6 archetype soft-vector features from `finalized_player_dataset_with_archetypes/all_d1_d2_player_seasons_with_k8_and_fixed_k6_reprojected_archetypes.csv`. This is the drop-7/8 approach that keeps original k8 centers 1-6 fixed and reprojects players onto those centers.
+
+### No-D2-Minutes Summary Files
+
+- `no_d2_minutes_summary.md`: compact paper-facing summary of the two reruns.
+- `no_d2_minutes_comparison.csv`: best model by target/regime for the two reruns.
+
 ## Files In Each Output Folder
 
 - `baseline_transfer_impact_model_ready.csv`: model-ready transfer table used by the run.

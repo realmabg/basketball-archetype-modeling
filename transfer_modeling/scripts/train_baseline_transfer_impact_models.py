@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Train baseline D2-to-D1 impact models without archetype features.
+"""Train baseline D2-to-D1 impact models.
 
 The script builds a model-ready transfer table, joins D1 PORPAG and D2
 efficiency/rate features from the combined player database, and evaluates
@@ -128,6 +128,29 @@ ARCHETYPE_NUMERIC_FEATURES = [
     "d2_k6_drop7_8_archetype_6_weight",
     "d2_archetype_vector_missing",
 ]
+
+D2_MINUTE_FEATURES = {"d2_MIN", "d2_MPG"}
+
+ARCHETYPE_COLUMN_MAPS = {
+    "drop7_8_renormalized": {
+        "k6_drop7_8_archetype_confidence": "k6_drop7_8_archetype_confidence",
+        "k6_drop7_8_kept_mass_from_k8_1_to_6": "k6_drop7_8_kept_mass_from_k8_1_to_6",
+        "k6_drop7_8_removed_mass_from_k8_7_to_8": "k6_drop7_8_removed_mass_from_k8_7_to_8",
+        **{
+            f"k6_drop7_8_archetype_{idx}_weight": f"k6_drop7_8_archetype_{idx}_weight"
+            for idx in range(1, 7)
+        },
+    },
+    "fixed_1to6_reprojected": {
+        "k6_drop7_8_archetype_confidence": "k6_fixed_1to6_archetype_confidence",
+        "k6_drop7_8_kept_mass_from_k8_1_to_6": "k6_fixed_1to6_kept_mass_from_k8_1_to_6",
+        "k6_drop7_8_removed_mass_from_k8_7_to_8": "k6_fixed_1to6_removed_mass_from_k8_7_to_8",
+        **{
+            f"k6_drop7_8_archetype_{idx}_weight": f"k6_fixed_1to6_archetype_{idx}_weight"
+            for idx in range(1, 7)
+        },
+    },
+}
 
 
 def norm_text(value: object) -> str:
@@ -315,7 +338,12 @@ ARCHETYPE_VECTOR_COLS = [
 ]
 
 
-def add_archetype_vectors(out: pd.DataFrame, vector_path: Path) -> pd.DataFrame:
+def add_archetype_vectors(
+    out: pd.DataFrame,
+    vector_path: Path,
+    archetype_mode: str = "drop7_8_renormalized",
+) -> pd.DataFrame:
+    column_map = ARCHETYPE_COLUMN_MAPS[archetype_mode]
     out["d2_archetype_match_method"] = "unmatched"
     out["d2_archetype_vector_missing"] = 1.0
     for col in ARCHETYPE_VECTOR_COLS:
@@ -329,7 +357,7 @@ def add_archetype_vectors(out: pd.DataFrame, vector_path: Path) -> pd.DataFrame:
     vectors["season_end_join"] = vectors["season"].map(season_end_year)
     vectors["team_key_join"] = vectors["team"].map(team_key)
     vectors["_name_keys"] = vectors["player_name"].map(name_keys)
-    to_numeric(vectors, ARCHETYPE_VECTOR_COLS)
+    to_numeric(vectors, list(column_map.values()))
 
     by_name_team_season: dict[tuple[str, str, float], list[int]] = {}
     by_name_season: dict[tuple[str, float], list[int]] = {}
@@ -387,7 +415,7 @@ def add_archetype_vectors(out: pd.DataFrame, vector_path: Path) -> pd.DataFrame:
 
         vector_row = vectors.loc[candidates[0]]
         for col in ARCHETYPE_VECTOR_COLS:
-            out.at[out_idx, f"d2_{col}"] = pd.to_numeric(vector_row[col], errors="coerce")
+            out.at[out_idx, f"d2_{col}"] = pd.to_numeric(vector_row[column_map[col]], errors="coerce")
         out.at[out_idx, "d2_archetype_vector_missing"] = 0.0
         out.at[out_idx, "d2_archetype_match_method"] = match_method
         matched += 1
@@ -553,6 +581,7 @@ def load_and_join(
     combined_path: Path,
     alt_d2_advanced_path: Path,
     archetype_vector_path: Path | None = None,
+    archetype_mode: str = "drop7_8_renormalized",
 ) -> pd.DataFrame:
     transfers = pd.read_csv(transfers_path, low_memory=False)
     combined = pd.read_csv(combined_path, low_memory=False)
@@ -655,7 +684,7 @@ def load_and_join(
     out = fill_alt_d2_advanced(out, alt_d2_advanced_path)
     fill_derived_d2_efficiency(out)
     if archetype_vector_path is not None:
-        out = add_archetype_vectors(out, archetype_vector_path)
+        out = add_archetype_vectors(out, archetype_vector_path, archetype_mode)
     return out
 
 
@@ -706,10 +735,16 @@ def models(random_state: int) -> dict[str, object]:
     }
 
 
-def feature_sets(df: pd.DataFrame) -> dict[str, dict[str, list[str]]]:
+def d2_numeric_features(drop_d2_minutes: bool = False) -> list[str]:
+    if not drop_d2_minutes:
+        return D2_NUMERIC_FEATURES
+    return [col for col in D2_NUMERIC_FEATURES if col not in D2_MINUTE_FEATURES]
+
+
+def feature_sets(df: pd.DataFrame, drop_d2_minutes: bool = False) -> dict[str, dict[str, list[str]]]:
     numeric_base = [
         col
-        for col in D2_NUMERIC_FEATURES + CONTEXT_NUMERIC_FEATURES + ARCHETYPE_NUMERIC_FEATURES
+        for col in d2_numeric_features(drop_d2_minutes) + CONTEXT_NUMERIC_FEATURES + ARCHETYPE_NUMERIC_FEATURES
         if col in df.columns
     ]
     categorical = [col for col in CATEGORICAL_FEATURES if col in df.columns and df[col].notna().any()]
@@ -778,11 +813,16 @@ def split_masks(df: pd.DataFrame, target_col: str) -> tuple[pd.Series, pd.Series
     return available & df["next_d1_season"].ne(test_season), available & df["next_d1_season"].eq(test_season), f"season_holdout_{test_season}"
 
 
-def train_single_target(df: pd.DataFrame, out_dir: Path, random_state: int) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def train_single_target(
+    df: pd.DataFrame,
+    out_dir: Path,
+    random_state: int,
+    drop_d2_minutes: bool = False,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     results = []
     predictions = []
     calibration = []
-    feature_def = feature_sets(df)
+    feature_def = feature_sets(df, drop_d2_minutes)
     model_defs = models(random_state)
 
     for target_name, target_col in TARGETS.items():
@@ -854,7 +894,7 @@ def train_single_target(df: pd.DataFrame, out_dir: Path, random_state: int) -> t
     return pd.DataFrame(results), pd.concat(predictions, ignore_index=True), pd.DataFrame(calibration)
 
 
-def train_multi_output(df: pd.DataFrame, random_state: int) -> pd.DataFrame:
+def train_multi_output(df: pd.DataFrame, random_state: int, drop_d2_minutes: bool = False) -> pd.DataFrame:
     all_targets = list(TARGETS.values())
     available = df[all_targets].notna().all(axis=1)
     holdout = df["next_d1_season"].eq("2025-26")
@@ -862,7 +902,7 @@ def train_multi_output(df: pd.DataFrame, random_state: int) -> pd.DataFrame:
         return pd.DataFrame()
 
     rows = []
-    feature_def = feature_sets(df)
+    feature_def = feature_sets(df, drop_d2_minutes)
     multi_models = {
         "multi_ridge": Ridge(alpha=10.0),
         "multi_random_forest": RandomForestRegressor(
@@ -913,10 +953,10 @@ def train_multi_output(df: pd.DataFrame, random_state: int) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def feature_coverage(df: pd.DataFrame, out_dir: Path) -> None:
+def feature_coverage(df: pd.DataFrame, out_dir: Path, drop_d2_minutes: bool = False) -> None:
     cols = [
         col
-        for col in D2_NUMERIC_FEATURES
+        for col in d2_numeric_features(drop_d2_minutes)
         + CONTEXT_NUMERIC_FEATURES
         + ARCHETYPE_NUMERIC_FEATURES
         + WITH_MINUTES_FEATURES
@@ -943,6 +983,17 @@ def main() -> int:
     parser.add_argument("--alt-d2-advanced", default=ALT_D2_ADVANCED_PATH)
     parser.add_argument("--archetype-vectors", default=ARCHETYPE_VECTOR_PATH)
     parser.add_argument("--include-archetypes", action="store_true")
+    parser.add_argument(
+        "--archetype-mode",
+        choices=sorted(ARCHETYPE_COLUMN_MAPS),
+        default="drop7_8_renormalized",
+        help="Which archetype columns to pull from --archetype-vectors.",
+    )
+    parser.add_argument(
+        "--drop-d2-minutes",
+        action="store_true",
+        help="Remove raw D2 minute features d2_MIN and d2_MPG from model inputs.",
+    )
     parser.add_argument("--out-dir", default=OUT_DIR)
     parser.add_argument("--random-state", type=int, default=42)
     args = parser.parse_args()
@@ -955,13 +1006,14 @@ def main() -> int:
         Path(args.combined),
         Path(args.alt_d2_advanced),
         Path(args.archetype_vectors) if args.include_archetypes else None,
+        args.archetype_mode,
     )
     model_ready = out_dir / "baseline_transfer_impact_model_ready.csv"
     df.to_csv(model_ready, index=False)
-    feature_coverage(df, out_dir)
+    feature_coverage(df, out_dir, args.drop_d2_minutes)
 
-    results, predictions, calibration = train_single_target(df, out_dir, args.random_state)
-    multi_results = train_multi_output(df, args.random_state)
+    results, predictions, calibration = train_single_target(df, out_dir, args.random_state, args.drop_d2_minutes)
+    multi_results = train_multi_output(df, args.random_state, args.drop_d2_minutes)
     if not multi_results.empty:
         all_results = pd.concat([results, multi_results], ignore_index=True)
     else:
@@ -981,6 +1033,9 @@ def main() -> int:
         "alt_d2_advanced_exact_matches": int(df.attrs.get("alt_advanced_exact_matches", 0)),
         "alt_d2_advanced_unique_name_matches": int(df.attrs.get("alt_advanced_unique_name_matches", 0)),
         "include_archetypes": bool(args.include_archetypes),
+        "archetype_mode": args.archetype_mode if args.include_archetypes else None,
+        "drop_d2_minutes": bool(args.drop_d2_minutes),
+        "d2_minute_features_removed": sorted(D2_MINUTE_FEATURES) if args.drop_d2_minutes else [],
         "d2_archetype_vector_matches": int(df.attrs.get("d2_archetype_vector_matches", 0)),
     }
     (out_dir / "baseline_impact_model_run_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")

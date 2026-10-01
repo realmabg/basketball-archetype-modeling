@@ -53,6 +53,23 @@ k6_drop7_8_removed_mass_from_k8_7_to_8 = k8_weight_7 + k8_weight_8
 
 Rows with zero retained mass in archetypes 1-6 cannot be renormalized. There are 25 such rows; those use a uniform fallback of `1/6` across the six cleaned archetypes.
 
+## Fixed-Centroid 1-6 Reprojection
+
+`all_d1_d2_player_seasons_with_k8_and_fixed_k6_reprojected_archetypes.csv` is the preferred drop-7/8 version when we want archetypes 7 and 8 removed without simply redistributing their original weights.
+
+This file keeps the original k8 archetype centers 1-6 fixed, removes centers 7 and 8, and recomputes every player-season's nonnegative weights against only centers 1-6. It is not a fresh k=6 model, so archetypes 1-6 keep their original k8 meanings.
+
+Added fixed-projection columns:
+
+- `k6_fixed_1to6_archetype_id`
+- `k6_fixed_1to6_archetype_confidence`
+- `k6_fixed_1to6_projection_sse`
+- `k6_fixed_1to6_kept_mass_from_k8_1_to_6`
+- `k6_fixed_1to6_removed_mass_from_k8_7_to_8`
+- `k6_fixed_1to6_archetype_1_weight` through `k6_fixed_1to6_archetype_6_weight`
+
+Validation summary: 37,262 rows; no missing fixed weights; max weight-sum error `6.66e-16`; no dominant-ID mismatches; dominant counts are 1: 4,111, 2: 4,319, 3: 7,091, 4: 7,147, 5: 5,669, 6: 8,925. See `fixed_k6_reprojection_summary.json` for the machine-readable summary.
+
 ## Validation
 
 Validation checks passed before pushing:

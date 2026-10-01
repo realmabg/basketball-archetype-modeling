@@ -1,0 +1,45 @@
+{
+  "input": "combined_d1_d2_exports/archetype_experiments_step43_sample3000_grid/k8__pooled_zscore__no_height_no_efficiency__method-pgd__init-uniform__ninit-1__all_d1_d2_player_seasons_k8_and_drop7_8_k6_vectors.csv",
+  "profiles": "combined_d1_d2_exports/archetype_experiments_step43_sample3000_grid/profiles/k8__pooled_zscore__no_height_no_efficiency__method-pgd__init-uniform__ninit-1__profiles.csv",
+  "scaling": "combined_d1_d2_exports/archetype_experiments_step43_sample3000_grid/scaling/k8__pooled_zscore__no_height_no_efficiency__method-pgd__init-uniform__ninit-1__scaling.csv",
+  "output": "combined_d1_d2_exports/archetype_experiments_step43_sample3000_grid/k8__pooled_zscore__no_height_no_efficiency__method-pgd__init-uniform__ninit-1__all_d1_d2_player_seasons_k8_and_fixed_k6_reprojected_vectors.csv",
+  "rows": 37262,
+  "features": [
+    "mins_per_game",
+    "FTR",
+    "three_share",
+    "three_pa_per_100_team_poss",
+    "usg",
+    "tov_pct",
+    "ast_pct",
+    "orb_pct",
+    "drb_pct",
+    "blk_pct",
+    "stl_pct",
+    "ast_tov"
+  ],
+  "retained_archetypes": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "removed_archetypes": [
+    7,
+    8
+  ],
+  "max_weight_sum_error": 4.440892098500626e-16,
+  "min_weight": 0.0,
+  "mean_projection_sse": 5.628680469088075,
+  "median_projection_sse": 3.942616222667305,
+  "dominant_counts": {
+    "1": 4111,
+    "2": 4319,
+    "3": 7091,
+    "4": 7147,
+    "5": 5669,
+    "6": 8925
+  }
+}
