@@ -1,0 +1,9 @@
+run,target,regime,model,test_n,mae,rmse,r2,pearson,spearman,numeric_feature_count,categorical_feature_count,include_archetypes,archetype_mode,context_mode
+archetypes_d2_stats_conf_tier_no_d1_minutes,bpm,no_minutes,multi_extra_trees,159,2.252751022513627,2.6735805940576696,0.2272563400377308,0.5058601447948603,0.4368032278506321,51,1,True,no_minutes_drop5_7_fixed,conf_tier_only
+archetypes_d2_stats_conf_tier_no_d1_minutes,bpr,no_minutes,gradient_boosting,162,1.4037661821427014,1.787628442339908,0.2483618514729012,0.5169987978367212,0.5268194096966724,51,1,True,no_minutes_drop5_7_fixed,conf_tier_only
+archetypes_d2_stats_conf_tier_no_d1_minutes,porpag,no_minutes,multi_random_forest,159,0.8434629151197127,1.032052169157303,0.1144000859371476,0.383565815130495,0.3673799613238135,51,1,True,no_minutes_drop5_7_fixed,conf_tier_only
+archetypes_d2_stats_conf_tier_no_d1_minutes,rapm,no_minutes,elasticnet,163,2.0222341540688578,2.5721513155240316,0.1004554151700288,0.3925160523607761,0.3721703854518335,51,1,True,no_minutes_drop5_7_fixed,conf_tier_only
+baseline_d2_stats_conf_tier_no_d1_minutes,bpm,no_minutes,multi_extra_trees,159,2.2525260212436096,2.689611785441745,0.2179615825193146,0.4953884789953407,0.4208610138980557,41,1,False,,conf_tier_only
+baseline_d2_stats_conf_tier_no_d1_minutes,bpr,no_minutes,extra_trees,162,1.376301443819812,1.7586896516863202,0.2725004675961041,0.5537362433278018,0.5420207916668902,41,1,False,,conf_tier_only
+baseline_d2_stats_conf_tier_no_d1_minutes,porpag,no_minutes,multi_random_forest,159,0.8267555508454439,1.0173332299269855,0.1394804833441593,0.4352480187379821,0.415267804564694,41,1,False,,conf_tier_only
+baseline_d2_stats_conf_tier_no_d1_minutes,rapm,no_minutes,elasticnet,163,2.0008453898558316,2.5442126562101355,0.1198909573231729,0.4059171080203453,0.3783857177594399,41,1,False,,conf_tier_only
