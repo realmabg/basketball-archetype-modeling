@@ -1,0 +1,9 @@
+archetype_id,rows,share,d1_rows,d2_rows,mean_membership_weight,top_z_features,bottom_z_features
+1,5150,0.1382105093661102,2880,2270,0.4298834619245408,ast_tov=3.69; three_share=1.70; three_pa_per_100_team_poss=0.45; ast_pct=0.01; blk_pct=-0.79,usg=-1.93; tov_pct=-1.84; FTR=-1.42; drb_pct=-0.91; stl_pct=-0.89
+2,4664,0.125167731200687,2880,1784,0.4786954485242197,blk_pct=3.97; orb_pct=2.78; drb_pct=2.64; FTR=1.02; usg=0.01,three_share=-1.55; three_pa_per_100_team_poss=-1.42; ast_tov=-0.86; ast_pct=-0.80; tov_pct=-0.13
+3,8882,0.2383661639203478,4792,4090,0.4564507078627772,ast_pct=3.09; stl_pct=2.43; usg=2.24; ast_tov=1.63; FTR=0.79,orb_pct=-0.67; three_share=-0.53; blk_pct=-0.52; drb_pct=-0.15; three_pa_per_100_team_poss=-0.14
+4,2844,0.0763244055606247,1541,1303,0.3687487671243463,stl_pct=3.14; three_share=1.78; three_pa_per_100_team_poss=0.81; tov_pct=0.58; drb_pct=0.27,FTR=-1.74; ast_tov=-1.42; usg=-1.14; ast_pct=-1.11; blk_pct=-0.85
+5,2916,0.0782566689925393,1622,1294,0.4081123185996886,tov_pct=3.43; three_share=0.29; blk_pct=-0.03; ast_pct=-0.04; drb_pct=-0.84,stl_pct=-1.99; FTR=-1.80; usg=-1.59; orb_pct=-1.05; three_pa_per_100_team_poss=-0.88
+6,3856,0.1034834415758681,1659,2197,0.3802815153403932,drb_pct=2.48; orb_pct=2.27; usg=1.57; blk_pct=0.22; FTR=-0.71,stl_pct=-2.02; tov_pct=-1.86; ast_tov=-1.61; ast_pct=-1.54; three_share=-1.47
+7,3462,0.092909666684558,1892,1570,0.4096825080774428,FTR=3.70; tov_pct=1.37; orb_pct=0.29; stl_pct=0.04; blk_pct=-0.89,usg=-1.75; drb_pct=-1.62; three_share=-1.56; three_pa_per_100_team_poss=-1.42; ast_pct=-1.22
+8,5488,0.1472814126992646,2954,2534,0.39694902388884,three_pa_per_100_team_poss=2.53; three_share=2.03; usg=1.64; blk_pct=0.13; FTR=-1.05,stl_pct=-2.02; ast_tov=-1.72; ast_pct=-1.57; tov_pct=-1.53; orb_pct=-1.44

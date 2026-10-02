@@ -1,19 +1,7 @@
-original_archetype_id_k8,redistributed_archetype_id_k6,players
-1,1,454
-2,2,409
-3,3,279
-4,4,449
-5,5,433
-6,6,334
-7,4,112
-7,3,77
-7,6,67
-7,2,54
-7,5,53
-7,1,40
-8,6,53
-8,1,47
-8,5,40
-8,3,36
-8,4,36
-8,2,27
+source_k8_archetype_id,k6_archetype_id,archetype_name,source_k8_rows_before_drop,rows_after_reprojection,avg_removed_mass
+1,1,Low Usage Connector,5150,5889,0.1846665603499906
+2,2,Rim Protecting Big,4664,6969,0.2985175180781114
+3,3,Lead Guard,8882,10015,0.194449130097789
+4,4,Defensive Spacer,2844,4900,0.2757400010957174
+6,5,Scoring Big,3856,3877,0.2400136074141984
+8,6,Pure Shooter,5488,5612,0.1445182528151441

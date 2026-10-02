@@ -37,15 +37,14 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.svm import SVR
 
 
-TRANSFER_PATH = ""
-COMBINED_PATH = ""
-ALT_D2_ADVANCED_PATH = ""
-ARCHETYPE_VECTOR_PATH = "data/enriched_d1_d2_player_stats_with_archetypes.csv"
-SUPPLEMENTAL_D2_ADVANCED_PATH = ""
-WORKING_D2_ADVANCED_PATH = ""
-WEBSITE_PRIORITY_D2_ADVANCED_PATH = ""
-WEBSITE_MIN5_HEIGHTS_D2_ADVANCED_PATH = ""
-MODEL_READY_PATH = "data/transfer_model_ready_with_archetypes.csv"
+TRANSFER_PATH = "_archive_legacy/combined_d1_d2_exports/d2_to_d1_transfers_with_hoop_rapm_evanmiya_bpr.csv"
+COMBINED_PATH = "_archive_legacy/combined_d1_d2_exports/combined_d1_d2_player_database_model_ready_step42_drop_skipped_height_schools.csv"
+ALT_D2_ADVANCED_PATH = "_archive_legacy/d2_database_export/d2_player_seasons_2021_22_to_2025_26_website_priority_min5mpg_gp5_with_heights.csv"
+ARCHETYPE_VECTOR_PATH = "models/player_archetypes/k8_no_minutes_fixed_k6_drop5_7_vectors.csv"
+SUPPLEMENTAL_D2_ADVANCED_PATH = "_archive_legacy/fix_d2_data/exports/d2_player_database_with_heights_classes_step26.csv"
+WORKING_D2_ADVANCED_PATH = "_archive_legacy/fix_d2_data/working/clean_step18_roster_urls_24_heights.csv"
+WEBSITE_PRIORITY_D2_ADVANCED_PATH = "_archive_legacy/d2_database_export/d2_player_seasons_2021_22_to_2025_26_website_priority.csv"
+WEBSITE_MIN5_HEIGHTS_D2_ADVANCED_PATH = "_archive_legacy/d2_database_export/d2_player_seasons_2021_22_to_2025_26_website_priority_min5mpg_gp5_with_heights.csv"
 OUT_DIR = "models/transfer_with_archetypes/runs"
 
 TARGETS = {
@@ -119,49 +118,31 @@ CONFERENCE_TIER_CATEGORICAL_FEATURES = ["d1_conf_tier"]
 WITH_MINUTES_FEATURES = ["d1_GP", "d1_mins_per_game"]
 
 ARCHETYPE_NUMERIC_FEATURES = [
-    "d2_k6_drop7_8_archetype_confidence",
-    "d2_k6_drop7_8_kept_mass_from_k8_1_to_6",
-    "d2_k6_drop7_8_removed_mass_from_k8_7_to_8",
-    "d2_k6_drop7_8_archetype_1_weight",
-    "d2_k6_drop7_8_archetype_2_weight",
-    "d2_k6_drop7_8_archetype_3_weight",
-    "d2_k6_drop7_8_archetype_4_weight",
-    "d2_k6_drop7_8_archetype_5_weight",
-    "d2_k6_drop7_8_archetype_6_weight",
+    "d2_k6_no_minutes_drop5_7_archetype_confidence",
+    "d2_k6_no_minutes_drop5_7_kept_mass_from_k8_nonjunk",
+    "d2_k6_no_minutes_drop5_7_removed_mass_from_k8_5_7",
+    "d2_k6_no_minutes_drop5_7_archetype_1_source_k8_1_low_usage_connector_weight",
+    "d2_k6_no_minutes_drop5_7_archetype_2_source_k8_2_rim_protecting_big_weight",
+    "d2_k6_no_minutes_drop5_7_archetype_3_source_k8_3_lead_guard_weight",
+    "d2_k6_no_minutes_drop5_7_archetype_4_source_k8_4_defensive_spacer_weight",
+    "d2_k6_no_minutes_drop5_7_archetype_5_source_k8_6_scoring_big_weight",
+    "d2_k6_no_minutes_drop5_7_archetype_6_source_k8_8_pure_shooter_weight",
     "d2_archetype_vector_missing",
 ]
 
 D2_MINUTE_FEATURES = {"d2_MIN", "d2_MPG"}
 
 ARCHETYPE_COLUMN_MAPS = {
-    "drop7_8_renormalized": {
-        "k6_drop7_8_archetype_confidence": "k6_drop7_8_archetype_confidence",
-        "k6_drop7_8_kept_mass_from_k8_1_to_6": "k6_drop7_8_kept_mass_from_k8_1_to_6",
-        "k6_drop7_8_removed_mass_from_k8_7_to_8": "k6_drop7_8_removed_mass_from_k8_7_to_8",
-        **{
-            f"k6_drop7_8_archetype_{idx}_weight": f"k6_drop7_8_archetype_{idx}_weight"
-            for idx in range(1, 7)
-        },
-    },
-    "fixed_1to6_reprojected": {
-        "k6_drop7_8_archetype_confidence": "k6_fixed_1to6_archetype_confidence",
-        "k6_drop7_8_kept_mass_from_k8_1_to_6": "k6_fixed_1to6_kept_mass_from_k8_1_to_6",
-        "k6_drop7_8_removed_mass_from_k8_7_to_8": "k6_fixed_1to6_removed_mass_from_k8_7_to_8",
-        **{
-            f"k6_drop7_8_archetype_{idx}_weight": f"k6_fixed_1to6_archetype_{idx}_weight"
-            for idx in range(1, 7)
-        },
-    },
     "no_minutes_drop5_7_fixed": {
-        "k6_drop7_8_archetype_confidence": "k6_no_minutes_drop5_7_archetype_confidence",
-        "k6_drop7_8_kept_mass_from_k8_1_to_6": "k6_no_minutes_drop5_7_kept_mass_from_k8_nonjunk",
-        "k6_drop7_8_removed_mass_from_k8_7_to_8": "k6_no_minutes_drop5_7_removed_mass_from_k8_5_7",
-        "k6_drop7_8_archetype_1_weight": "k6_no_minutes_drop5_7_archetype_1_source_k8_1_low_usage_connector_weight",
-        "k6_drop7_8_archetype_2_weight": "k6_no_minutes_drop5_7_archetype_2_source_k8_2_rim_protecting_big_weight",
-        "k6_drop7_8_archetype_3_weight": "k6_no_minutes_drop5_7_archetype_3_source_k8_3_lead_guard_weight",
-        "k6_drop7_8_archetype_4_weight": "k6_no_minutes_drop5_7_archetype_4_source_k8_4_defensive_spacer_weight",
-        "k6_drop7_8_archetype_5_weight": "k6_no_minutes_drop5_7_archetype_5_source_k8_6_scoring_big_weight",
-        "k6_drop7_8_archetype_6_weight": "k6_no_minutes_drop5_7_archetype_6_source_k8_8_pure_shooter_weight",
+        "k6_no_minutes_drop5_7_archetype_confidence": "k6_no_minutes_drop5_7_archetype_confidence",
+        "k6_no_minutes_drop5_7_kept_mass_from_k8_nonjunk": "k6_no_minutes_drop5_7_kept_mass_from_k8_nonjunk",
+        "k6_no_minutes_drop5_7_removed_mass_from_k8_5_7": "k6_no_minutes_drop5_7_removed_mass_from_k8_5_7",
+        "k6_no_minutes_drop5_7_archetype_1_source_k8_1_low_usage_connector_weight": "k6_no_minutes_drop5_7_archetype_1_source_k8_1_low_usage_connector_weight",
+        "k6_no_minutes_drop5_7_archetype_2_source_k8_2_rim_protecting_big_weight": "k6_no_minutes_drop5_7_archetype_2_source_k8_2_rim_protecting_big_weight",
+        "k6_no_minutes_drop5_7_archetype_3_source_k8_3_lead_guard_weight": "k6_no_minutes_drop5_7_archetype_3_source_k8_3_lead_guard_weight",
+        "k6_no_minutes_drop5_7_archetype_4_source_k8_4_defensive_spacer_weight": "k6_no_minutes_drop5_7_archetype_4_source_k8_4_defensive_spacer_weight",
+        "k6_no_minutes_drop5_7_archetype_5_source_k8_6_scoring_big_weight": "k6_no_minutes_drop5_7_archetype_5_source_k8_6_scoring_big_weight",
+        "k6_no_minutes_drop5_7_archetype_6_source_k8_8_pure_shooter_weight": "k6_no_minutes_drop5_7_archetype_6_source_k8_8_pure_shooter_weight",
     },
 }
 
@@ -339,22 +320,22 @@ ALT_ADVANCED_RENAME_MAP = {
 }
 
 ARCHETYPE_VECTOR_COLS = [
-    "k6_drop7_8_archetype_confidence",
-    "k6_drop7_8_kept_mass_from_k8_1_to_6",
-    "k6_drop7_8_removed_mass_from_k8_7_to_8",
-    "k6_drop7_8_archetype_1_weight",
-    "k6_drop7_8_archetype_2_weight",
-    "k6_drop7_8_archetype_3_weight",
-    "k6_drop7_8_archetype_4_weight",
-    "k6_drop7_8_archetype_5_weight",
-    "k6_drop7_8_archetype_6_weight",
+    "k6_no_minutes_drop5_7_archetype_confidence",
+    "k6_no_minutes_drop5_7_kept_mass_from_k8_nonjunk",
+    "k6_no_minutes_drop5_7_removed_mass_from_k8_5_7",
+    "k6_no_minutes_drop5_7_archetype_1_source_k8_1_low_usage_connector_weight",
+    "k6_no_minutes_drop5_7_archetype_2_source_k8_2_rim_protecting_big_weight",
+    "k6_no_minutes_drop5_7_archetype_3_source_k8_3_lead_guard_weight",
+    "k6_no_minutes_drop5_7_archetype_4_source_k8_4_defensive_spacer_weight",
+    "k6_no_minutes_drop5_7_archetype_5_source_k8_6_scoring_big_weight",
+    "k6_no_minutes_drop5_7_archetype_6_source_k8_8_pure_shooter_weight",
 ]
 
 
 def add_archetype_vectors(
     out: pd.DataFrame,
     vector_path: Path,
-    archetype_mode: str = "drop7_8_renormalized",
+    archetype_mode: str = "no_minutes_drop5_7_fixed",
 ) -> pd.DataFrame:
     column_map = ARCHETYPE_COLUMN_MAPS[archetype_mode]
     out["d2_archetype_match_method"] = "unmatched"
@@ -594,7 +575,7 @@ def load_and_join(
     combined_path: Path,
     alt_d2_advanced_path: Path,
     archetype_vector_path: Path | None = None,
-    archetype_mode: str = "drop7_8_renormalized",
+    archetype_mode: str = "no_minutes_drop5_7_fixed",
 ) -> pd.DataFrame:
     transfers = pd.read_csv(transfers_path, low_memory=False)
     combined = pd.read_csv(combined_path, low_memory=False)
@@ -1014,7 +995,6 @@ def feature_coverage(
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model-ready", default=MODEL_READY_PATH, help="Use an existing curated model-ready table instead of rebuilding joins.")
     parser.add_argument("--transfers", default=TRANSFER_PATH)
     parser.add_argument("--combined", default=COMBINED_PATH)
     parser.add_argument("--alt-d2-advanced", default=ALT_D2_ADVANCED_PATH)
@@ -1023,7 +1003,7 @@ def main() -> int:
     parser.add_argument(
         "--archetype-mode",
         choices=sorted(ARCHETYPE_COLUMN_MAPS),
-        default="drop7_8_renormalized",
+        default="no_minutes_drop5_7_fixed",
         help="Which archetype columns to pull from --archetype-vectors.",
     )
     parser.add_argument(
@@ -1044,16 +1024,13 @@ def main() -> int:
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    if args.model_ready:
-        df = pd.read_csv(args.model_ready, low_memory=False)
-    else:
-        df = load_and_join(
-            Path(args.transfers),
-            Path(args.combined),
-            Path(args.alt_d2_advanced),
-            Path(args.archetype_vectors) if args.include_archetypes else None,
-            args.archetype_mode,
-        )
+    df = load_and_join(
+        Path(args.transfers),
+        Path(args.combined),
+        Path(args.alt_d2_advanced),
+        Path(args.archetype_vectors) if args.include_archetypes else None,
+        args.archetype_mode,
+    )
     model_ready = out_dir / "baseline_transfer_impact_model_ready.csv"
     df.to_csv(model_ready, index=False)
     feature_coverage(df, out_dir, args.drop_d2_minutes, args.context_mode)

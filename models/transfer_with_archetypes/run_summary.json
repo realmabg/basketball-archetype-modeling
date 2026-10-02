@@ -6,12 +6,16 @@
     "porpag": 630,
     "bpm": 703
   },
-  "model_ready": "data/transfer_model_ready_with_archetypes.csv",
-  "results": "models/transfer_with_archetypes/results.csv",
-  "predictions": "models/transfer_with_archetypes/predictions.csv",
-  "calibration": "models/transfer_with_archetypes/calibration_deciles.csv",
+  "model_ready": "models/transfer_with_archetypes/baseline_transfer_impact_model_ready.csv",
+  "results": "models/transfer_with_archetypes/baseline_impact_model_results.csv",
+  "predictions": "models/transfer_with_archetypes/baseline_impact_model_predictions.csv",
+  "calibration": "models/transfer_with_archetypes/baseline_impact_model_calibration_deciles.csv",
   "alt_d2_advanced_exact_matches": 353,
   "alt_d2_advanced_unique_name_matches": 0,
   "include_archetypes": true,
+  "archetype_mode": "no_minutes_drop5_7_fixed",
+  "drop_d2_minutes": false,
+  "context_mode": "full",
+  "d2_minute_features_removed": [],
   "d2_archetype_vector_matches": 696
 }

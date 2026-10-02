@@ -1,0 +1,48 @@
+{
+  "run_id": "k8__pooled_zscore__no_height_no_minutes_no_efficiency__method-nnls__init-uniform__ninit-1",
+  "method": "archetypes.AA(method=\"nnls\")",
+  "rows": 37262,
+  "output": "combined_d1_d2_exports/archetype_experiments_step43_no_minutes_full_k8_nnls_vectors/k8__pooled_zscore__no_height_no_minutes_no_efficiency__method-nnls__init-uniform__ninit-1__all_d1_d2_player_seasons_k8_no_minutes_vectors.csv",
+  "profile_summary": "combined_d1_d2_exports/archetype_experiments_step43_no_minutes_full_k8_nnls_vectors/k8__pooled_zscore__no_height_no_minutes_no_efficiency__method-nnls__init-uniform__ninit-1__profile_summary.csv",
+  "features": [
+    "FTR",
+    "three_share",
+    "three_pa_per_100_team_poss",
+    "usg",
+    "tov_pct",
+    "ast_pct",
+    "orb_pct",
+    "drb_pct",
+    "blk_pct",
+    "stl_pct",
+    "ast_tov"
+  ],
+  "excluded_features": [
+    "height_inches",
+    "mins_per_game",
+    "eFG",
+    "three_pct",
+    "ft_pct",
+    "resid_three_pct_shot_mix",
+    "resid_orb_pct_height",
+    "resid_three_share_height",
+    "resid_drb_pct_height"
+  ],
+  "rss_per_row": 2.2743977641376616,
+  "min_archetype_rows": 2844,
+  "median_archetype_rows": 4260.0,
+  "max_archetype_rows": 8882,
+  "missing_assignments": 0,
+  "max_weight_sum_error": 7.771561172376096e-16,
+  "min_weight": 9.990441704556497e-09,
+  "dominant_counts": {
+    "1": 5150,
+    "2": 4664,
+    "3": 8882,
+    "4": 2844,
+    "5": 2916,
+    "6": 3856,
+    "7": 3462,
+    "8": 5488
+  }
+}

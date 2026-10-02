@@ -28,4 +28,6 @@ python models/transfer_with_archetypes/train_transfer_impact_models.py \
 - `run_summary.json`: run metadata.
 - `feature_target_coverage.csv`: feature and target coverage.
 
-The archetype features are the D2 `k6_drop7_8_*` soft-vector fields.
+The archetype features are the D2 `k6_no_minutes_drop5_7_*` soft-vector fields:
+Low Usage Connector, Rim Protecting Big, Lead Guard, Defensive Spacer, Scoring
+Big, and Pure Shooter.

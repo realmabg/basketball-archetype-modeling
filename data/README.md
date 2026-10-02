@@ -18,18 +18,20 @@ archetypal-analysis run.
 Full D1/D2 player-season stats with final archetype fields joined in. It
 includes the original player/stat columns plus:
 
-- `k8_archetype_id`
-- `k8_archetype_confidence`
-- `k8_archetype_1_weight` through `k8_archetype_8_weight`
-- `k6_drop7_8_archetype_id`
-- `k6_drop7_8_archetype_confidence`
-- `k6_drop7_8_kept_mass_from_k8_1_to_6`
-- `k6_drop7_8_removed_mass_from_k8_7_to_8`
-- `k6_drop7_8_archetype_1_weight` through
-  `k6_drop7_8_archetype_6_weight`
+- `k8_no_minutes_archetype_id`
+- `k8_no_minutes_archetype_confidence`
+- `k8_no_minutes_archetype_1_weight` through
+  `k8_no_minutes_archetype_8_weight`
+- `k6_no_minutes_drop5_7_archetype_id`
+- `k6_no_minutes_drop5_7_archetype_label`
+- `k6_no_minutes_drop5_7_archetype_confidence`
+- `k6_no_minutes_drop5_7_kept_mass_from_k8_nonjunk`
+- `k6_no_minutes_drop5_7_removed_mass_from_k8_5_7`
+- the six fixed k6 weights for Low Usage Connector, Rim Protecting Big, Lead
+  Guard, Defensive Spacer, Scoring Big, and Pure Shooter
 
 Fifty rows from the full D1/D2 stats table do not have final archetype values
-because they were not present in the finalized archetype export.
+because they were not present in the no-minutes archetype export.
 
 ## `transfer_model_ready_no_archetypes.csv`
 
@@ -39,5 +41,5 @@ and joined D1 outcome targets.
 
 ## `transfer_model_ready_with_archetypes.csv`
 
-Same transfer sample as the baseline table, with D2 archetype-vector features
-included for the archetype transfer model.
+Same transfer sample as the baseline table, with D2 no-minutes k6
+archetype-vector features included for the archetype transfer model.

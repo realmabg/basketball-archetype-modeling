@@ -97,15 +97,15 @@ The reported results below use the with-minutes regime, which adds:
 
 The with-archetypes version also adds D2 archetype soft-vector fields:
 
-- `d2_k6_drop7_8_archetype_confidence`
-- `d2_k6_drop7_8_kept_mass_from_k8_1_to_6`
-- `d2_k6_drop7_8_removed_mass_from_k8_7_to_8`
-- `d2_k6_drop7_8_archetype_1_weight`
-- `d2_k6_drop7_8_archetype_2_weight`
-- `d2_k6_drop7_8_archetype_3_weight`
-- `d2_k6_drop7_8_archetype_4_weight`
-- `d2_k6_drop7_8_archetype_5_weight`
-- `d2_k6_drop7_8_archetype_6_weight`
+- `d2_k6_no_minutes_drop5_7_archetype_confidence`
+- `d2_k6_no_minutes_drop5_7_kept_mass_from_k8_nonjunk`
+- `d2_k6_no_minutes_drop5_7_removed_mass_from_k8_5_7`
+- Low Usage Connector weight
+- Rim Protecting Big weight
+- Lead Guard weight
+- Defensive Spacer weight
+- Scoring Big weight
+- Pure Shooter weight
 - `d2_archetype_vector_missing`
 
 ## Results Without Archetypes
@@ -125,16 +125,23 @@ These are the best current with-minutes results from the destination conference 
 
 | Target | Best Model | Test N | MAE | RMSE | R2 | Pearson | Spearman |
 |---|---|---:|---:|---:|---:|---:|---:|
-| BPR | Gradient Boosting | 162 | 1.261 | 1.566 | 0.423 | 0.655 | 0.661 |
-| PORPAG | Ridge | 227 | 0.625 | 0.826 | 0.467 | 0.699 | 0.714 |
-| BPM | Multi Extra Trees | 159 | 1.951 | 2.313 | 0.422 | 0.672 | 0.609 |
-| RAPM | Multi Extra Trees | 159 | 1.761 | 2.204 | 0.283 | 0.534 | 0.487 |
+| BPR | Ridge | 162 | 1.297 | 1.608 | 0.392 | 0.638 | 0.651 |
+| PORPAG | Ridge | 227 | 0.623 | 0.820 | 0.475 | 0.706 | 0.718 |
+| BPM | Multi Gradient Boosting | 159 | 1.978 | 2.346 | 0.405 | 0.648 | 0.659 |
+| RAPM | Multi Extra Trees | 159 | 1.759 | 2.202 | 0.285 | 0.535 | 0.493 |
 
 ## Takeaway
 
-The model has meaningful predictive signal for D2-to-D1 translation. PORPAG, BPM, and BPR are the strongest targets, with held-out R2 values around 0.42-0.48. RAPM is noisier but still shows signal, with R2 around 0.28.
+The model has meaningful predictive signal for D2-to-D1 translation. PORPAG,
+BPM, and BPR are the strongest targets, with held-out R2 values around
+0.39-0.48 depending on the target and feature set. RAPM is noisier but still
+shows signal, with R2 around 0.28.
 
-Adding D2 archetype features gives small gains for BPR, BPM, and RAPM, but slightly lowers PORPAG in this run. The archetype features appear useful, but the destination context and minutes variables remain the strongest drivers in the current setup.
+Adding the active no-minutes archetype features gives a small RAPM gain and
+keeps PORPAG essentially unchanged, while BPR and BPM move modestly depending on
+the metric used to pick the best model. The archetype features appear useful as
+style/context descriptors, but destination context and minutes variables remain
+the strongest drivers in the current setup.
 
 ## Modeling Folders
 

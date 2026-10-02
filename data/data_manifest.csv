@@ -1,6 +1,6 @@
 file,rows,columns
 raw_d2_player_stats.csv,17411,48
 archetype_model_features.csv,37262,32
-enriched_d1_d2_player_stats_with_archetypes.csv,37312,186
+enriched_d1_d2_player_stats_with_archetypes.csv,37312,189
 transfer_model_ready_no_archetypes.csv,703,122
 transfer_model_ready_with_archetypes.csv,703,133
