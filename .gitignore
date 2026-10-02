@@ -3,13 +3,7 @@
 __pycache__/
 *.pyc
 
-# Large/local data should stay outside git.
-data/
-!data/
-data/*
-!data/processed/
-data/processed/*
-!data/processed/*.csv
+# Keep compressed/binary data exports out of git. Curated CSVs in data/ are tracked.
 *.zip
 *.parquet
 

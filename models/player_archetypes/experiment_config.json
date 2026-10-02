@@ -1,0 +1,98 @@
+{
+  "input": "data/archetype_model_features.csv",
+  "k_values": [
+    "6",
+    "7",
+    "8",
+    "9",
+    "10"
+  ],
+  "scaling_modes": [
+    "pooled_zscore",
+    "division_zscore"
+  ],
+  "feature_sets": {
+    "full": [
+      "height_inches",
+      "mins_per_game",
+      "eFG",
+      "FTR",
+      "three_share",
+      "three_pa_per_100_team_poss",
+      "usg",
+      "tov_pct",
+      "ast_pct",
+      "orb_pct",
+      "drb_pct",
+      "blk_pct",
+      "stl_pct",
+      "ast_tov",
+      "three_pct",
+      "ft_pct"
+    ],
+    "no_height": [
+      "mins_per_game",
+      "eFG",
+      "FTR",
+      "three_share",
+      "three_pa_per_100_team_poss",
+      "usg",
+      "tov_pct",
+      "ast_pct",
+      "orb_pct",
+      "drb_pct",
+      "blk_pct",
+      "stl_pct",
+      "ast_tov",
+      "three_pct",
+      "ft_pct"
+    ],
+    "no_efficiency": [
+      "height_inches",
+      "mins_per_game",
+      "FTR",
+      "three_share",
+      "three_pa_per_100_team_poss",
+      "usg",
+      "tov_pct",
+      "ast_pct",
+      "orb_pct",
+      "drb_pct",
+      "blk_pct",
+      "stl_pct",
+      "ast_tov"
+    ],
+    "no_height_no_efficiency": [
+      "mins_per_game",
+      "FTR",
+      "three_share",
+      "three_pa_per_100_team_poss",
+      "usg",
+      "tov_pct",
+      "ast_pct",
+      "orb_pct",
+      "drb_pct",
+      "blk_pct",
+      "stl_pct",
+      "ast_tov"
+    ]
+  },
+  "efficiency_features_excluded": [
+    "eFG",
+    "three_pct",
+    "ft_pct"
+  ],
+  "methods": [
+    "nnls",
+    "pgd"
+  ],
+  "inits": [
+    "uniform",
+    "furthest_sum"
+  ],
+  "n_init": 1,
+  "max_iter": 40,
+  "tol": 0.0001,
+  "seed": 20260927,
+  "sample_size": 3000
+}
